@@ -1,7 +1,7 @@
 package it.alessiomoretti.RPN;
 
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
+import java.util.IllegalFormatException;
+
 import java.util.Stack;
 
 public class RPNParser {
@@ -12,7 +12,7 @@ public class RPNParser {
     public static final byte MUL = (int) '*';
     public static final byte DIV = (int) '/';
 
-    private  String[] rawInput;
+    private String[] rawInput;
     private Stack<Integer> inputStack;
 
     public String[] getRawInput() {
@@ -30,7 +30,8 @@ public class RPNParser {
      *
      * @param input String
      */
-    public RPNParser(String input) {
+    public RPNParser(String input) throws IllegalFormatException {
+        // TODO add operators check in original string -> throwing exception
         this.rawInput = input.split(" ");
         this.inputStack = new Stack<>();
     }
@@ -54,19 +55,28 @@ public class RPNParser {
     /**
      * This utility can be used to check for anomalies in the input string.
      *
-     * @param input String
+     * @param input array of String (the elements)
      * @return boolean, true or false
      */
     public static boolean isMalformed(String[] input) {
+        // following simple rules adopted to check for illegal RPN task
 
-        if (input.length == 1)
-            return !isNumeric(input[0]);
+        // 1. if the input is only one-element-long it must be a numeric value
+        if (input.length == 1) return !isNumeric(input[0]);
 
+        // 2. if the input is two-elements-long it cannot be processed
+        if (input.length == 2) return true;
+
+        // 3. if it is a zero-element-long task it cannot be processed
         if (input.length == 0) return true;
 
-        if (isNumeric(input[input.length - 1])) return true;
-
-        if (input.length >= 2) if (!isNumeric(input[0]) && !isNumeric(input[1])) return true;
+        // 4. check on operands order
+        if (input.length > 2) {
+            // 4.1 fails if the last element is numeric
+            if (isNumeric(input[input.length -1])) return true;
+            // 4.2 fails if the first two elements are not numeric
+            if (!isNumeric(input[0]) && !isNumeric(input[1])) return true;
+        }
 
         return false;
     }

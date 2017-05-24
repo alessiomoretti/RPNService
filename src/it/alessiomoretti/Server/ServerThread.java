@@ -35,9 +35,13 @@ public class ServerThread implements Runnable {
             while ((inputChar = reader.read()) != -1) {
                 char c = (char) inputChar;
                 // when ASCII linefeed is received the input is assumed complete
-                if (c == (int) '\n') break;
+                if (c == '\n') break;
                 inputBuffer.append(c);
             }
+
+            // removing the carriage return if any ('\r')
+            if (inputBuffer.indexOf("\r") != -1)
+                inputBuffer.deleteCharAt(inputBuffer.indexOf("\r"));
 
             // building up the input string to pass to the RPNParser
             String inputString = inputBuffer.toString();
