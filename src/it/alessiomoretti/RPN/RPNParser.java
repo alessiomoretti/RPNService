@@ -1,13 +1,16 @@
 package it.alessiomoretti.RPN;
 
+import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.Stack;
 
 public class RPNParser {
 
-    public static final String SUM = "+";
-    public static final String SUB = "-";
-    public static final String MUL = "*";
-    public static final String DIV = "/";
+    // ASCII bytes encoded math operators
+    public static final byte SUM = (int) '+';
+    public static final byte SUB = (int) '-';
+    public static final byte MUL = (int) '*';
+    public static final byte DIV = (int) '/';
 
     private  String[] rawInput;
     private Stack<Integer> inputStack;
@@ -56,9 +59,15 @@ public class RPNParser {
      */
     public static boolean isMalformed(String[] input) {
 
+        if (input.length == 1)
+            return !isNumeric(input[0]);
+
         if (input.length == 0) return true;
+
         if (isNumeric(input[input.length - 1])) return true;
-        if (!isNumeric(input[0]) && !isNumeric(input[1])) return true;
+
+        if (input.length >= 2) if (!isNumeric(input[0]) && !isNumeric(input[1])) return true;
+
         return false;
     }
 }
