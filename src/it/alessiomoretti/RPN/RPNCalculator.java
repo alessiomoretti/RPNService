@@ -50,6 +50,8 @@ public class RPNCalculator {
                         break;
                     case RPNParser.DIV:
                         elem2 = parser.getInputStack().pop();
+                        // cannot divide by zero!
+                        if (elem2 == 0) return null;
                         elem1 = parser.getInputStack().pop();
                         parser.getInputStack().push(elem1 / elem2);
                         break;
