@@ -56,7 +56,7 @@ public class ServerThread implements Runnable {
                 RPNParser parser = new RPNParser(inputString);
                 // performing computation routine
                 Integer outputResult = RPNCalculator.computeByStack(new RPNParser(inputString));
-                outputString = (outputResult != -1) ? outputResult.toString() : "ERROR illegal task submitted";
+                outputString = (outputResult != null) ? outputResult.toString() : "ERROR illegal task submitted";
 
             } else { outputString = "ERROR illegal format for this task"; }
 

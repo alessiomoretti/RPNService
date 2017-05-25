@@ -7,13 +7,13 @@ public class RPNCalculator {
      * we will use a stack to approach the Reverse Polish Notation task.
      *
      * @param parser RPNParser instance
-     * @return integer
+     * @return Integer (null if no result can be computed)
      */
     public static Integer computeByStack(RPNParser parser) {
 
         // if an illegal task was entered, a negative value is returned
         if (RPNParser.isMalformed(parser.getRawInput()))
-            return -1;
+            return null;
 
         for (String element : parser.getRawInput()) {
 
@@ -22,12 +22,12 @@ public class RPNCalculator {
                 parser.getInputStack().push(Integer.valueOf(element));
             } else {
                 // if less than two operands are in the stack, an illegal task was submitted...
-                if (parser.getInputStack().size() < 2) return -1;
+                if (parser.getInputStack().size() < 2) return null;
                 // ...else we select the last two integers from the stack and
                 // stack the result itself!
 
                 // if it is an illegal operators sequence (e.g. '*+' instead of "* +")
-                if (element.getBytes().length > 1) return -1;
+                if (element.getBytes().length > 1) return null;
                 // assuming if no numeric value, it is a single-byte-operator...
                 byte operator = element.getBytes()[0];
 
@@ -57,8 +57,7 @@ public class RPNCalculator {
             }
         }
 
-        // returning the last element (the result) in the stack
-        return parser.getInputStack().pop();
-
+        // at the very end of the computation, only the result must remain in the stack!
+        return (parser.getInputStack().size() == 1) ? parser.getInputStack().pop() : null;
     }
 }
