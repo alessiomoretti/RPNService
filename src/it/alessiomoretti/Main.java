@@ -1,20 +1,34 @@
 package it.alessiomoretti;
 
-import it.alessiomoretti.RPN.RPNCalculator;
-import it.alessiomoretti.RPN.RPNParser;
 import it.alessiomoretti.Server.ServerThread;
+import jdk.nashorn.internal.runtime.regexp.joni.exception.ValueException;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 
 public class Main {
 
+    private static Integer PORT = 1234; // default port
+
     public static void main(String[] args) throws IOException {
-        // TODO parametric port and exception handling
-        ServerSocket s = new ServerSocket(1234);
-        while(true) {
-            ServerThread thread = new ServerThread(s.accept());
-            thread.run();
+
+        for (String arg : args) {
+            if (arg.contains("--port=")) {
+                try {
+                    PORT = Integer.valueOf(arg.split("--port=")[1]);
+                } catch (ValueException e) {
+                    System.out.println("Invalid port number: exiting now! \n");
+                    return;
+                }
+            }
         }
+        try {
+            ServerSocket s = new ServerSocket(PORT);
+            System.out.println("Server running on port: " + String.valueOf(PORT));
+            for(;;) {
+                ServerThread thread = new ServerThread(s.accept());
+                thread.run();
+            }
+        } catch (Exception e) { e.printStackTrace(); }
     }
 }
