@@ -12,16 +12,19 @@ public class Main {
 
     public static void main(String[] args) throws IOException {
 
+        // if '--port=<portnumber>' is specified via CLI
         for (String arg : args) {
             if (arg.contains("--port=")) {
                 try {
                     PORT = Integer.valueOf(arg.split("--port=")[1]);
-                } catch (ValueException e) {
+                } catch (ValueException | ArrayIndexOutOfBoundsException e) {
                     System.out.println("Invalid port number: exiting now! \n");
                     return;
                 }
             }
         }
+
+        // running server
         try {
             ServerSocket s = new ServerSocket(PORT);
             System.out.println("Server running on port: " + String.valueOf(PORT));
