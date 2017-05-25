@@ -1,11 +1,5 @@
 package it.alessiomoretti.RPN;
 
-
-import java.awt.*;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-
 public class RPNCalculator {
 
     /**
@@ -27,6 +21,8 @@ public class RPNCalculator {
                 // if it is numeric, we perform conversion and stack it up...
                 parser.getInputStack().push(Integer.valueOf(element));
             } else {
+                // if less than two operands are in the stack, an illegal task was submitted...
+                if (parser.getInputStack().size() < 2) return -1;
                 // ...else we select the last two integers from the stack and
                 // stack the result itself!
 

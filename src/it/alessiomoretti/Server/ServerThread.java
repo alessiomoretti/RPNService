@@ -31,7 +31,7 @@ public class ServerThread implements Runnable {
         try {
             // accepting new chars from the socket
             int inputChar;
-            StringBuffer inputBuffer = new StringBuffer();
+            StringBuilder inputBuffer = new StringBuilder();
             while ((inputChar = reader.read()) != -1) {
                 char c = (char) inputChar;
                 // when ASCII linefeed is received the input is assumed complete
@@ -45,12 +45,27 @@ public class ServerThread implements Runnable {
 
             // building up the input string to pass to the RPNParser
             String inputString = inputBuffer.toString();
-            // computing the result
-            Integer outputResult = RPNCalculator.computeByStack(new RPNParser(inputString));
 
-            // TODO Error messages
-            this.output.write((outputResult.toString() + "\n").getBytes(StandardCharsets.US_ASCII));
+            // preparing output result
+            String outputString;
+
+            // check for legal format
+            if (RPNParser.isLegalFormat(inputString)) {
+
+                // setting up parser
+                RPNParser parser = new RPNParser(inputString);
+                // performing computation routine
+                Integer outputResult = RPNCalculator.computeByStack(new RPNParser(inputString));
+                outputString = (outputResult != -1) ? outputResult.toString() : "ERROR illegal task submitted";
+
+            } else { outputString = "ERROR illegal format for this task"; }
+
+            // sending on output buffer the result as ASCII encoded text
+            this.output.write((outputString + "\n").getBytes(StandardCharsets.US_ASCII));
             this.socket.close();
+
+            // console
+            System.out.println(inputString + " => " + outputString);
 
         } catch (IOException e) {
             // printing out on stderr the exception stacktrace

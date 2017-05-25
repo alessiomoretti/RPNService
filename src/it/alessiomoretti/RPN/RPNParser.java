@@ -1,7 +1,5 @@
 package it.alessiomoretti.RPN;
 
-import java.util.IllegalFormatException;
-
 import java.util.Stack;
 
 public class RPNParser {
@@ -30,11 +28,11 @@ public class RPNParser {
      *
      * @param input String
      */
-    public RPNParser(String input) throws IllegalFormatException {
-        // TODO add operators check in original string -> throwing exception
+    public RPNParser(String input) {
         this.rawInput = input.split(" ");
         this.inputStack = new Stack<>();
     }
+
 
     /**
      * This is a simple utiity to find out if a given string is numeric
@@ -42,7 +40,7 @@ public class RPNParser {
      * or it is an operator).
      *
      * @param s String, the element to be processed
-     * @return boolean, true or false
+     * @return boolean
      */
     public static boolean isNumeric(String s) {
         for (char c : s.toCharArray()) {
@@ -51,12 +49,43 @@ public class RPNParser {
         return true;
     }
 
+    /**
+     * This support utility can be used to check for illegal formats
+     * in the input string.
+     *
+     * @param input String
+     * @return boolean
+     */
+    public static boolean isLegalFormat(String input) {
+
+        // if it is an empty string it cannot be processed
+        if (input.length() == 0) return false;
+
+        // support variables to pre-parse the string
+        int elements = 0;
+        boolean foundOperator = false;
+
+        // check if any non numeric operand is provided
+        for (String elem : input.split(" ")) {
+            elements++;
+            if (elem.lastIndexOf(SUM) != -1 || elem.lastIndexOf(SUB) != -1 ||
+                elem.lastIndexOf(DIV) != -1 || elem.lastIndexOf(MUL) != -1) {
+                foundOperator = true;
+                continue;
+            }
+            if (!isNumeric(elem)) return false;
+        }
+
+        //check if any operator is provided
+        return elements == 1 || foundOperator;
+    }
 
     /**
-     * This utility can be used to check for anomalies in the input string.
+     * This support utility can be used to check for anomalies in the input operands
+     * and operators sequence.
      *
      * @param input array of String (the elements)
-     * @return boolean, true or false
+     * @return boolean
      */
     public static boolean isMalformed(String[] input) {
         // following simple rules adopted to check for illegal RPN task
