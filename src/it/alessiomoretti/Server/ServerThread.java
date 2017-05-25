@@ -26,9 +26,10 @@ public class ServerThread implements Runnable {
 
     @Override
     public void run() {
-        Reader reader = new InputStreamReader(this.input, StandardCharsets.US_ASCII);
-
         try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(this.input, StandardCharsets.US_ASCII));
+            PrintStream printer = new PrintStream(this.output);
+
             // accepting new chars from the socket
             int inputChar;
             StringBuilder inputBuffer = new StringBuilder();
@@ -61,7 +62,10 @@ public class ServerThread implements Runnable {
             } else { outputString = "ERROR illegal format for this task"; }
 
             // sending on output buffer the result as ASCII encoded text
-            this.output.write((outputString + "\n").getBytes(StandardCharsets.US_ASCII));
+            printer.write((outputString + "\n").getBytes(StandardCharsets.US_ASCII));
+
+            this.input.close();
+            this.output.close();
             this.socket.close();
 
             // console

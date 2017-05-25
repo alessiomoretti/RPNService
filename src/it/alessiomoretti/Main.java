@@ -28,9 +28,15 @@ public class Main {
         try {
             ServerSocket s = new ServerSocket(PORT);
             System.out.println("Server running on port: " + String.valueOf(PORT));
-            for(;;) {
-                ServerThread thread = new ServerThread(s.accept());
-                thread.run();
+            while (true) {
+                // we use thread-based parallelism to make the server
+                // concurrently answer the client requests
+                // 1. creating the RPN ServerThread
+                ServerThread rpnService = new ServerThread(s.accept());
+                // 2. the service implements Runnable so we can pass it to a different thread
+                //    (one thread per client request)
+                Thread rpnServiceThread = new Thread(rpnService);
+                rpnServiceThread.start();
             }
         } catch (Exception e) { e.printStackTrace(); }
     }
