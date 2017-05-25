@@ -64,4 +64,4 @@ for future improvements and general enhancements is provided (Pull requests and 
 ### Development ###
 This software was developed on IntellijIDEA (by JetBrains) using Java 1.8 library, on macOS Sierra.
 
-#####Latest update: May 25, 2017
+#####Latest update: May 25, 2017#####
